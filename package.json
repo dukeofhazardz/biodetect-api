@@ -1,0 +1,26 @@
+{
+  "name": "biodetect-api",
+  "version": "1.0.0",
+  "description": "Biodetect-API is an innovative API that harnesses the power of Google's Gemini AI technology to provide detailed descriptions of living organisms, including plants, animals, and insects.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dukeofhazardz/biodetect-api.git"
+  },
+  "keywords": [
+    "plant",
+    "animal",
+    "insect",
+    "organism"
+  ],
+  "author": "Nnaemeka Daniel John",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dukeofhazardz/biodetect-api/issues"
+  },
+  "homepage": "https://github.com/dukeofhazardz/biodetect-api#readme"
+}
