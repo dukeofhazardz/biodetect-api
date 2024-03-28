@@ -8,7 +8,7 @@ genai = genAI()
 url = 'http://localhost:8000/detect'
 
 # Path to the image file you want to upload
-image_path = 'imgs/images.jpg'
+image_path = 'imgs/download.jpg'
 
 # Open the image file in binary mode
 with open(image_path, 'rb') as file:

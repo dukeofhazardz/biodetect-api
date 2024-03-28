@@ -14,8 +14,9 @@ def parse_response_to_json(response):
             section = re.split(":", data)
             print(section)
             if len(section) == 2:
+                key = section[0].lower()
                 value = section[1].strip('\n1')
-                res_json[section[0]] = value
+                res_json[key] = value
     except Exception as e:
         res_json["error"] = "Not an image of a living organism (plant, insect or animal)"
     finally:
