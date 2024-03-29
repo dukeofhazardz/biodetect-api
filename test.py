@@ -23,4 +23,4 @@ with open(image_path, 'rb') as file:
     response = genai.generateResponse(image=image_content, text=text)"""
 
 # Print the response from the server
-print(response.content)
+print(response.json())
