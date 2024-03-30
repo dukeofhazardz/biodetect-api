@@ -1,2 +1,4 @@
 .env
 utils/prompt.txt
+imgs
+test.py
