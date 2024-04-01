@@ -19,12 +19,18 @@ generation_config = {
     "max_output_tokens": 1024,
 }
 
+
 safety_settings = [
-    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}
+    {"category": "HARM_CATEGORY_HARASSMENT",
+     "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_HATE_SPEECH",
+     "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+     "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+     "threshold": "BLOCK_MEDIUM_AND_ABOVE"}
 ]
+
 
 class genAI:
     """ genAI is a class that utilizes the google gemini api
@@ -32,7 +38,9 @@ class genAI:
     def __init__(self):
         """ This initializes the genAI class """
         genai.configure(api_key=GOOGLE_API_KEY)
-        self.model = genai.GenerativeModel('gemini-pro-vision', generation_config=generation_config, safety_settings=safety_settings)
+        self.model = genai.GenerativeModel('gemini-pro-vision',
+                                           generation_config=generation_config,
+                                           safety_settings=safety_settings)
 
     def generateResponse(self, image):
         img = PIL.Image.open(io.BytesIO(image))
@@ -44,7 +52,7 @@ class genAI:
             drive_api = DriveAPI()
             drive_api.FileDownload(file_id=FILE_ID, file_name=FILE_NAME)
             text = read_text_from_file(file_path)
-        
+
         try:
             response = self.model.generate_content([text, img])
             response.resolve()

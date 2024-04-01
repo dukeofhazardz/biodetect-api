@@ -3,6 +3,7 @@ from gemini.gemini import genAI
 
 app = FastAPI()
 
+
 @app.get('/')
 async def home():
     return {"message": "Welcome to the BioDetect API",
@@ -28,6 +29,7 @@ async def home():
             "author": "Nnaemeka Daniel John",
             "powered_by": "google gemini-pro-vision"
             }
+
 
 @app.post('/detect')
 async def detect(image: UploadFile = File(...)):
