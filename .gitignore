@@ -1,3 +1,6 @@
+api/__pycache__
+gemini/__pycache__
+prompt/__pycache__
 .env
 prompt.txt
 credentials.json
