@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
-from utils.gemini import genAI
+from gemini.gemini import genAI
 
 app = FastAPI()
 
@@ -31,6 +31,7 @@ async def home():
 
 @app.post('/detect')
 async def detect(image: UploadFile = File(...)):
+    """ A POST Request Detects an organism based on the request image """
     image_content = await image.read()
     ai = genAI()
     response = ai.generateResponse(image=image_content)

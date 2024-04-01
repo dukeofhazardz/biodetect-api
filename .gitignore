@@ -1,4 +1,7 @@
 .env
-utils/prompt.txt
+prompt.txt
+credentials.json
+token.json
+token.pickle
 imgs
 test.py
