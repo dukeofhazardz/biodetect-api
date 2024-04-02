@@ -43,7 +43,10 @@ class genAI:
                                            safety_settings=safety_settings)
 
     def generateResponse(self, image):
-        img = PIL.Image.open(io.BytesIO(image))
+        try:
+            img = PIL.Image.open(io.BytesIO(image))
+        except Exception as e:
+            return {"error": f"Error opening image: {str(e)}"}
         file_path = os.path.join(os.path.dirname(__file__), "..", FILE_NAME)
         text = ""
         if os.path.exists(file_path):
