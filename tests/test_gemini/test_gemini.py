@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from gemini.gemini import genAI
+from gemini.gemini import GenAI
 import PIL.Image
 import os
 
@@ -8,12 +8,12 @@ class TestGenAI(unittest.TestCase):
 
     @patch('gemini.gemini.genai.configure')
     def test_init(self, mock_configure):
-        genAI()
+        GenAI()
         mock_configure.assert_called_once()
 
     @patch('gemini.gemini.genai.GenerativeModel')
     def test_init_model(self, mock_generative_model):
-        genAI()
+        GenAI()
         mock_generative_model.assert_called_once_with('gemini-pro-vision',
                                                       generation_config={
                                                           "temperature": 0.8,
@@ -42,7 +42,7 @@ class TestGenAI(unittest.TestCase):
         mock_img_bytes = b"Mocked image bytes"
 
         with patch('gemini.gemini.os.path.exists', return_value=True):
-            ai = genAI()
+            ai = GenAI()
             response = ai.generateResponse(mock_img_bytes)
 
             mock_generative_model.assert_called_once_with('gemini-pro-vision',
@@ -79,7 +79,7 @@ class TestGenAI(unittest.TestCase):
             mock_drive_api.return_value = mock_drive_instance
             mock_drive_instance.FileDownload.return_value = None
 
-            ai = genAI()
+            ai = GenAI()
             response = ai.generateResponse(mock_img_bytes)
 
             mock_generative_model.assert_called_once_with('gemini-pro-vision',

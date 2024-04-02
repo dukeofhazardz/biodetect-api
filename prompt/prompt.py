@@ -9,13 +9,26 @@ from googleapiclient.http import MediaIoBaseDownload
 
 
 class DriveAPI:
+    """
+    A class representing a Google Drive API client.
+
+    This class provides methods for interacting with Google Drive,
+    including authentication, token management, and file download.
+
+    Attributes:
+        SCOPES (list): List of OAuth 2.0 scopes required for accessing Google Drive API.
+    """
     global SCOPES
 
     SCOPES = ['https://www.googleapis.com/auth/drive']
 
     def __init__(self):
-        """ Variable self.creds will store the user access token.
-            If no valid token found it will create one. """
+        """
+        Initializes a new instance of the DriveAPI class.
+
+        This constructor sets up authentication and establishes a connection to the Google Drive API.
+        If a valid access token is not found, it initiates the OAuth 2.0 authorization flow to obtain one.
+        """
         self.creds = None
 
         # Checks if file token.pickle exists
@@ -43,6 +56,16 @@ class DriveAPI:
         self.service = build('drive', 'v3', credentials=self.creds)
 
     def FileDownload(self, file_id, file_name):
+        """
+        Downloads a file from Google Drive.
+
+        Parameters:
+            file_id (str): The ID of the file to download.
+            file_name (str): The name of the file to save the downloaded content to.
+
+        Returns:
+            bool: True if the file download is successful, False otherwise.
+        """
         request = self.service.files().get_media(fileId=file_id)
         fh = io.BytesIO()
 
@@ -61,5 +84,5 @@ class DriveAPI:
             with open(file_name, 'wb') as f:
                 shutil.copyfileobj(fh, f)
             return True
-        except Exception as e:
+        except Exception:
             return False

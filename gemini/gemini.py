@@ -32,17 +32,25 @@ safety_settings = [
 ]
 
 
-class genAI:
-    """ genAI is a class that utilizes the google gemini api
-        to generate text response from an image """
+class GenAI:
+    """ This class houses the functionality for generating text response from
+        an image using the Google Gemini API. It initializes the API model and
+        provides a method to generate a response based on the input image.
+    """
     def __init__(self):
-        """ This initializes the genAI class """
-        genai.configure(api_key=GOOGLE_API_KEY)
-        self.model = genai.GenerativeModel('gemini-pro-vision',
+        """ Initializes an instance of the GenAI class
+        """
+        GenAI.configure(api_key=GOOGLE_API_KEY)
+        self.model = GenAI.GenerativeModel('gemini-pro-vision',
                                            generation_config=generation_config,
                                            safety_settings=safety_settings)
 
     def generateResponse(self, image):
+        """ Generates a text response from the input image.
+        Parameters:
+        @image: The input image content.
+        Returns: A JSON object containing the generated text response or an error message if an exception occurs during the process.
+        """
         try:
             img = PIL.Image.open(io.BytesIO(image))
         except Exception as e:
