@@ -40,8 +40,8 @@ class GenAI:
     def __init__(self):
         """ Initializes an instance of the GenAI class
         """
-        GenAI.configure(api_key=GOOGLE_API_KEY)
-        self.model = GenAI.GenerativeModel('gemini-pro-vision',
+        genai.configure(api_key=GOOGLE_API_KEY)
+        self.model = genai.GenerativeModel('gemini-pro-vision',
                                            generation_config=generation_config,
                                            safety_settings=safety_settings)
 
