@@ -64,6 +64,9 @@ async def detect(image: UploadFile = File(...)):
     Endpoint for detecting organisms based on images.
     """
     image_content = await image.read()
+    print("image read")
     ai = GenAI()
+    print("about to generate response")
     response = ai.generateResponse(image=image_content)
+    print("response generated")
     return response
