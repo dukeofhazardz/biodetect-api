@@ -1,10 +1,9 @@
-import pickle
-import os.path
 import io
 import shutil
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
+import shutil
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 
@@ -18,8 +17,6 @@ class DriveAPI:
     Attributes:
         SCOPES (list): List of OAuth 2.0 scopes required for accessing Google Drive API.
     """
-    global SCOPES
-
     SCOPES = ['https://www.googleapis.com/auth/drive']
 
     def __init__(self):
@@ -29,29 +26,7 @@ class DriveAPI:
         This constructor sets up authentication and establishes a connection to the Google Drive API.
         If a valid access token is not found, it initiates the OAuth 2.0 authorization flow to obtain one.
         """
-        self.creds = None
-
-        # Checks if file token.pickle exists
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
-                self.creds = pickle.load(token)
-
-        # If no valid credentials are available, request the user to log in.
-        if not self.creds or not self.creds.valid:
-
-            # If token is expired, it will be refreshed, else,
-            # we will request a new one.
-            if self.creds and self.creds.expired and self.creds.refresh_token:
-                self.creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                self.creds = flow.run_console()
-
-            # Saves the access token in token.pickle file for future usage
-            with open('token.pickle', 'wb') as token:
-                pickle.dump(self.creds, token)
-
+        self.creds = Credentials.from_service_account_file('service_account_key.json', scopes=self.SCOPES)
         # Connects to the API service
         self.service = build('drive', 'v3', credentials=self.creds)
 

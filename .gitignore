@@ -8,6 +8,7 @@ tests/test_prompt/__pycache__
 .env
 test.txt
 prompt.txt
+service_account_key.json
 credentials.json
 token.json
 token.pickle
