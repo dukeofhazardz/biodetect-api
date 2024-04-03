@@ -51,18 +51,14 @@ class GenAI:
         @image: The input image content.
         Returns: A JSON object containing the generated text response or an error message if an exception occurs during the process.
         """
-        print("in generate res function")
         try:
             img = PIL.Image.open(io.BytesIO(image))
         except Exception as e:
-            print("'error': f'Error opening image: {str(e)}'")
             return {"error": f"Error opening image: {str(e)}"}
-        print("open image file")
         file_path = os.path.join(os.path.dirname(__file__), "..", FILE_NAME)
         text = ""
         if os.path.exists(file_path):
             text = read_text_from_file(file_path)
-            print("file exists")
         else:
             drive_api = DriveAPI()
             drive_api.FileDownload(file_id=FILE_ID, file_name=FILE_NAME)
@@ -70,10 +66,7 @@ class GenAI:
 
         try:
             response = self.model.generate_content([text, img])
-            print("content generated")
             response.resolve()
-            print("content parsed")
             return parse_response_to_json(response.text)
         except Exception as e:
-            print("'error'': str(e)")
             return {"error": str(e)}
