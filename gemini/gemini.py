@@ -1,7 +1,6 @@
 import google.generativeai as genai
 from dotenv import load_dotenv
 from gemini.helper import *
-from prompt.prompt import DriveAPI
 import PIL.Image
 import os
 import io
@@ -60,9 +59,7 @@ class GenAI:
         if os.path.exists(file_path):
             text = read_text_from_file(file_path)
         else:
-            drive_api = DriveAPI()
-            drive_api.FileDownload(file_id=FILE_ID, file_name=FILE_NAME)
-            text = read_text_from_file(file_path)
+            return {"error": "Could not locate prompt file"}
 
         try:
             response = self.model.generate_content([text, img])
