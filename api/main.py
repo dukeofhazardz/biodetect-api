@@ -30,7 +30,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "https://*"
+    "https://biodetect-app.vercel.app",
 ]
 
 app.add_middleware(
