@@ -7,3 +7,4 @@ tests/test_gemini/__pycache__
 .env
 env
 prompt.txt
+.vercel

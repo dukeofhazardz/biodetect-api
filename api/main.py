@@ -23,9 +23,23 @@ The FastAPI framework is used to create a RESTful API that allows users to detec
 """
 
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from gemini.gemini import GenAI
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "https://*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 
 @app.get('/')
