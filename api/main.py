@@ -29,7 +29,8 @@ from gemini.gemini import GenAI
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://biodetect.onrender.com",
     "https://biodetect-app.vercel.app",
 ]
 
