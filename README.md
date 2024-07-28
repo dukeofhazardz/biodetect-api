@@ -1,6 +1,6 @@
 # BioDetect API
 
-The BioDetect API is a tool designed to detect various organisms based on images provided to the API. It utilizes the Google Gemini Pro Vision model to analyze images and provide information about the detected organism.
+The BioDetect API is a tool designed to detect various organisms based on images provided to the API. It utilizes the Google Gemini-1.5-Flash model to analyze images and provide information about the detected organism.
 
 ## Usage
 
@@ -88,4 +88,4 @@ curl -X POST -F "image=@/path/to/your/image.jpg" https://biodetect-api.onrender.
 - Nnaemeka Daniel John
 
 ## Powered By
-- Google Gemini-Pro-Vision
+- Google Gemini-1.5-Flash

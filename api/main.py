@@ -12,7 +12,7 @@ The FastAPI framework is used to create a RESTful API that allows users to detec
     - 'additional_info': Information about accepted image formats and the importance of providing clear and focused images.
     - 'json_response_format': A sample JSON response format that users can expect from the '/detect' endpoint.
     - 'author': The author of the API.
-    - 'powered_by': The technology powering the API (in this case, 'google gemini-pro-vision').
+    - 'powered_by': The technology powering the API (in this case, 'google gemini-1.5-flash').
 
 - Endpoint '/detect':
   - Method: POST
@@ -69,7 +69,7 @@ async def home():
                 "conservation_efforts_and_initiatives": ""
                 },
             "author": "Nnaemeka Daniel John",
-            "powered_by": "google gemini-pro-vision"
+            "powered_by": "google gemini-1.5-flash"
             }
 
 
