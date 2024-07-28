@@ -37,7 +37,7 @@ curl -X GET https://biodetect-api.onrender.com/
           "conservation_efforts_and_initiatives": ""
       },
       "author": "Nnaemeka Daniel John",
-      "powered_by": "google gemini-pro-vision"
+      "powered_by": "google gemini-1.5-flash"
   }
   ```
 

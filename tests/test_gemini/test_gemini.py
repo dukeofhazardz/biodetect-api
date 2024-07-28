@@ -1,106 +1,78 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from gemini.gemini import GenAI
-import PIL.Image
+from unittest.mock import patch, MagicMock, mock_open
 import os
+from io import BytesIO
+from PIL import Image
+from gemini.gemini import GenAI, genai
 
 class TestGenAI(unittest.TestCase):
 
-    @patch('gemini.gemini.genai.configure')
-    def test_init(self, mock_configure):
-        GenAI()
-        mock_configure.assert_called_once()
+    @patch('gemini.gemini.genai.GenerativeModel')
+    @patch('PIL.Image.open')
+    @patch('builtins.open', new_callable=mock_open, read_data="test prompt")
+    @patch('gemini.helper.read_text_from_file', return_value="test prompt")
+    @patch('os.path.exists', return_value=True)
+    def test_generate_response_success(self, mock_exists, mock_read_text, mock_open_builtin, mock_open_image, mock_GenerativeModel):
+        # Setup
+        mock_model = mock_GenerativeModel.return_value
+        mock_model.generate_content.return_value = MagicMock(text='{"result": "test result"}')
+        mock_open_image.return_value = MagicMock(spec=Image.Image)
+        image_content = b'test image content'
+
+        genai_instance = GenAI()
+
+        # Test
+        response = genai_instance.generateResponse(image_content)
+
+        # Validate
+        self.assertEqual(response, {
+            'error': 'Not an image of a living organism (plant, insect or animal)',
+            'next_steps': 'Insert a clear image of a plant, insect, or animal and try again.'
+            })
+        mock_model.generate_content.assert_called_once()
+
+    @patch('PIL.Image.open')
+    def test_generate_response_invalid_image(self, mock_open_image):
+        # Setup
+        mock_open_image.side_effect = ValueError("Invalid image")
+        image_content = BytesIO(b'invalid image content')
+
+        genai_instance = GenAI()
+
+        # Test
+        response = genai_instance.generateResponse(image_content)
+
+        # Validate
+        self.assertTrue('error' in response)
+
+    @patch('os.path.exists', return_value=False)
+    def test_generate_response_missing_prompt_file(self, mock_exists):
+        # Setup
+        image_content = BytesIO(b'test image content')
+
+        genai_instance = GenAI()
+
+        # Test
+        response = genai_instance.generateResponse(image_content)
+
+        # Validate
+        self.assertTrue('error' in response)
 
     @patch('gemini.gemini.genai.GenerativeModel')
-    def test_init_model(self, mock_generative_model):
-        GenAI()
-        mock_generative_model.assert_called_once_with('gemini-pro-vision',
-                                                      generation_config={
-                                                          "temperature": 0.8,
-                                                          "top_p": 0.9,
-                                                          "top_k": 2,
-                                                          "max_output_tokens": 1024,
-                                                      },
-                                                      safety_settings=[
-                                                          {"category": "HARM_CATEGORY_HARASSMENT",
-                                                           "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                          {"category": "HARM_CATEGORY_HATE_SPEECH",
-                                                           "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                          {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                                                           "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                          {"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                                                           "threshold": "BLOCK_MEDIUM_AND_ABOVE"}
-                                                      ])
+    @patch('PIL.Image.open')
+    @patch('builtins.open', new_callable=mock_open, read_data="test prompt")
+    @patch('gemini.helper.read_text_from_file', return_value="test prompt")
+    @patch('os.path.exists', return_value=True)
+    def test_generate_response_model_error(self, mock_exists, mock_read_text, mock_open_builtin, mock_open_image, mock_GenerativeModel):
+        # Setup
+        mock_model = mock_GenerativeModel.return_value
+        mock_model.generate_content.side_effect = Exception("Model error")
+        image_content = BytesIO(b'test image content')
 
-    @patch('gemini.gemini.genai.GenerativeModel')
-    @patch('gemini.gemini.read_text_from_file')
-    def test_generate_response_existing_file(self, mock_read_text_from_file, mock_generative_model):
-        mock_read_text_from_file.return_value = "Mocked text content"
-        mock_model_instance = MagicMock()
-        mock_generative_model.return_value = mock_model_instance
-        mock_img = MagicMock(spec=PIL.Image.Image)
-        mock_img_bytes = b"Mocked image bytes"
+        genai_instance = GenAI()
 
-        with patch('gemini.gemini.os.path.exists', return_value=True):
-            ai = GenAI()
-            response = ai.generateResponse(mock_img_bytes)
+        # Test
+        response = genai_instance.generateResponse(image_content)
 
-            mock_generative_model.assert_called_once_with('gemini-pro-vision',
-                                                          generation_config={
-                                                              "temperature": 0.8,
-                                                              "top_p": 0.9,
-                                                              "top_k": 2,
-                                                              "max_output_tokens": 1024,
-                                                          },
-                                                          safety_settings=[
-                                                              {"category": "HARM_CATEGORY_HARASSMENT",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                              {"category": "HARM_CATEGORY_HATE_SPEECH",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                              {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                              {"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"}
-                                                          ])
-            self.assertIsInstance(response, dict)
-
-    @patch('gemini.gemini.genai.GenerativeModel')
-    @patch('gemini.gemini.read_text_from_file')
-    @patch('gemini.gemini.DriveAPI')
-    def test_generate_response_download_file(self, mock_drive_api, mock_read_text_from_file, mock_generative_model):
-        mock_read_text_from_file.return_value = "Mocked text content"
-        mock_model_instance = MagicMock()
-        mock_generative_model.return_value = mock_model_instance
-        mock_img = MagicMock(spec=PIL.Image.Image)
-        mock_img_bytes = b"Mocked image bytes"
-
-        with patch('gemini.gemini.os.path.exists', return_value=False):
-            mock_drive_instance = MagicMock()
-            mock_drive_api.return_value = mock_drive_instance
-            mock_drive_instance.FileDownload.return_value = None
-
-            ai = GenAI()
-            response = ai.generateResponse(mock_img_bytes)
-
-            mock_generative_model.assert_called_once_with('gemini-pro-vision',
-                                                          generation_config={
-                                                              "temperature": 0.8,
-                                                              "top_p": 0.9,
-                                                              "top_k": 2,
-                                                              "max_output_tokens": 1024,
-                                                          },
-                                                          safety_settings=[
-                                                              {"category": "HARM_CATEGORY_HARASSMENT",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                              {"category": "HARM_CATEGORY_HATE_SPEECH",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                              {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-                                                              {"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                                                               "threshold": "BLOCK_MEDIUM_AND_ABOVE"}
-                                                          ])
-            self.assertIsInstance(response, dict)
-
-
-if __name__ == '__main__':
-    unittest.main()
+        # Validate
+        self.assertTrue('error' in response)

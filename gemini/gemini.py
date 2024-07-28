@@ -40,7 +40,7 @@ class GenAI:
         """ Initializes an instance of the GenAI class
         """
         genai.configure(api_key=GOOGLE_API_KEY)
-        self.model = genai.GenerativeModel('gemini-pro-vision',
+        self.model = genai.GenerativeModel('gemini-1.5-flash',
                                            generation_config=generation_config,
                                            safety_settings=safety_settings)
 
@@ -64,6 +64,7 @@ class GenAI:
         try:
             response = self.model.generate_content([text, img])
             response.resolve()
+            print(response.text)
             return parse_response_to_json(response.text)
         except Exception as e:
             return {"error": str(e)}

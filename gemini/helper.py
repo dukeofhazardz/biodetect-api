@@ -36,14 +36,16 @@ def parse_response_to_json(response):
         if len(split_data) < 2:
             raise ValueError("Response does not contain any structured data")
 
-        for data in split_data[1:]:
+        for data in split_data:
             section = re.split(":", data, maxsplit=1)
             if len(section) == 2:
                 key = (section[0].lower()).replace(" ", "_")
                 value = section[1].lstrip().strip('\n1').replace("\n", "; ")
                 res_json[key] = value
     except ValueError:
-        res_json["error"] = "Not an image of a living organism (plant, insect or animal)"
-        res_json["next_steps"] = "Insert a clear image of a plant, insect, or animal and try again."
+        res_json = {
+            "error": "Not an image of a living organism (plant, insect or animal)",
+            "next_steps": "Insert a clear image of a plant, insect, or animal and try again."
+        }
     finally:
         return res_json
